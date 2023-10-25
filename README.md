@@ -1,6 +1,7 @@
 # SiceWeb
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.7.
+Vista para verificar los comprobantes de La empresa que se envia directamente a Sice y para verificar autorizaciones corregir errores 
 
 ## Development server
 
