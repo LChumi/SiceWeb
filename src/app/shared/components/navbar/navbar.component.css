@@ -1,0 +1,89 @@
+@import "typeface-poppins";
+.navbar {
+  background: none;
+  z-index:1;
+  width: 90%;
+  padding: 0px 100px;
+  box-sizing: border-box;
+  position: fixed;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar__list ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+}
+
+.navbar__list ul li{
+  margin-left: 50px;
+}
+
+.navbar__list ul li a {
+  font-size: 14px;
+  text-decoration: none;
+  color: #404040;
+  font-weight: bold;
+  display: block;
+}
+
+.navbar__list ul li button {
+  background: linear-gradient(112.82deg, #45c2ef 19.93%, #397cdc 102.22%);
+  border: none;
+  padding: 10px 20px;
+  font-family: Inter;
+  font-weight: bold;
+  color: white;
+  border-radius: 9px;
+  cursor: pointer;
+  -webkit-transition: .4s ease;
+  transition: .4s ease;
+}
+
+.navbar__list ul li button:hover {
+  transform: translateY(-5px);
+}
+
+.navbar.scroll {
+  background: white;
+  top: -100px;
+  border-radius: 20px;
+  width: 90%;
+  animation: fadeDown .4s ease forwards;
+  box-shadow: 0px 0px 30px rgba(68 ,68 ,68 ,0.2);
+}
+
+@keyframes fadeDown {
+  0%{
+    top: -100px;
+  }
+  100%{
+    top: 20px;
+  }
+}
+
+.navbar__brand {
+  font-family: Poppins;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(112.82deg, #464849 19.93%, #397cdc 102.22%);
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+@media (max-width: 768px) {
+  .navbar {
+    width: 100%;
+    padding: 20px 100px;
+  }
+}

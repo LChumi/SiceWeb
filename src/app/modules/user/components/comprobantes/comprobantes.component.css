@@ -1,0 +1,208 @@
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  padding-bottom: 8px;
+}
+.table-widget thead {
+  position: sticky;
+}
+.caption-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.table-title {
+  display: flex;
+  gap: 12px;
+}
+.table-widget {
+  min-height: 80px;
+}
+.sticky-left {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #FCFCFD;
+}
+.sticky-right {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #FCFCFD;
+}
+.caption-container {
+  display: flex;
+  align-items: center;
+}
+.caption-container svg {
+  margin-top: -2px;
+}
+.sticky-right button {
+  border-radius: 12px;
+  background-color:#F1F2F6 ;
+  color: #272727;
+  outline: none;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s
+  ease-in-out;
+  padding: 10px 16px;
+}
+.sticky-right button:hover {
+  background-color: #272727;
+  color: #ECECF4
+}
+.table-wrapper::-webkit-scrollbar {
+  height: 12px;
+}
+.table-wrapper::-webkit-scrollbar-track {
+  background: #F1F2F6;
+  border-radius: 6px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #A0A7B1;
+  border-radius: 5px;
+}
+.details-wraper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.details-tipo__comrpobante {
+  font-weight: 600;
+}
+.details-tipo__empresa {
+  font-weight: 600;
+  white-space: nowrap;
+}
+table th,
+table td{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 8px;
+}
+.btn-success{
+  position: sticky;
+}
+
+/** estilos de modal **/
+.modal-opciones {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 998;
+}
+.modal-content-opciones {
+  position: relative;
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+.modal-content-opciones span {
+  font-size: 21px;
+  font-weight: 600;
+}
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  background: #ebedf9;
+  border-radius: 50%;
+  width: 33px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+}
+.close:hover {
+  background: #6c6c70;
+}
+.content {
+  margin: 20px 0;
+}
+.content p {
+  font-size: 16px;
+}
+.icons {
+  display: flex; /* Establece un contenedor flexible para los íconos */
+  align-items: center;
+  justify-content: center;
+  margin: 15px 0 20px 0;
+}
+.icons button {
+  height: 50px;
+  width: 50px;
+  font-size: 20px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+  margin: 0 10px;
+}
+
+.icons button:hover {
+  background: #2caaee;
+}
+/* Restringir el ancho máximo del contenedor de iconos */
+.icons {
+  max-width: 400px;
+  overflow: auto; /* Agrega barras de desplazamiento horizontal si los íconos no caben en la pantalla */
+  white-space: nowrap; /* Evita que los íconos se envuelvan a la siguiente línea */
+}
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0 -5px 0;
+  height: 45px;
+  border-radius: 4px;
+  padding: 0 5px;
+  border: 1px solid #e1e1e1;
+}
+.field.active {
+  border-color: #11131e;
+}
+.field i {
+  width: 50px;
+  font-size: 18px;
+  text-align: center;
+  border-radius: 50%;
+}
+.field.active i {
+  color: #11131e;
+}
+.field input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 15px;
+}
+.field button {
+  color: #fff;
+  padding: 5px 18px;
+  background: #11131e;
+}
+.field button:hover {
+  background: #6c6c70;
+}
