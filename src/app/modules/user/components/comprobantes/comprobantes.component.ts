@@ -24,6 +24,7 @@ export class ComprobantesComponent implements OnInit{
   listaComprobantes:ComprobElecGrande[]=[];
   searchText: string = '';
   filterComrpobantes: ComprobElecGrande[]=[];
+  totalComprobantes:number=0;
   showModal:boolean=false;
   xml:any='';
 
@@ -46,6 +47,7 @@ export class ComprobantesComponent implements OnInit{
         this.listaComprobantes = listaComprobantes;
         this.filterComrpobantes=listaComprobantes;
         this.isBuscando=false
+        this.totalComprobantes=listaComprobantes.length
       },
       error => {
         console.error('No se pudo obtener la lista ',error)
@@ -66,6 +68,7 @@ export class ComprobantesComponent implements OnInit{
         });
         this.listaComprobantes = listaComprobantes
         this.isBuscando=false;
+        this.totalComprobantes=listaComprobantes.length
       },
       error => {
         console.error('No se pudo obtener la lista ',error)
@@ -78,7 +81,6 @@ export class ComprobantesComponent implements OnInit{
     this.comprobanteService.getXml(comprobante.cco_codigo,comprobante.xmlf_empresa).subscribe(
       (dato:any) =>{
         this.xml= dato;
-        console.log(dato)
       }
     )
   }
@@ -106,6 +108,32 @@ export class ComprobantesComponent implements OnInit{
     );
   }
 
+  verAutorizacion(comprobante:ComprobElecGrande){
+    this.soapService.verAutorizacion(comprobante.xmlf_clave).subscribe(
+      (autorizacion:string)=>{
+        console.log(autorizacion)
+      }
+    )
+  }
+
+  verificarComprobante(comprobante:ComprobElecGrande){
+    this.soapService.verificarComprobante(comprobante.xmlf_clave).subscribe(
+      (verificacion:string)=>{
+        console.log(verificacion)
+      }
+    )
+  }
+
+  renviarComprobante(comprobante:ComprobElecGrande){
+    console.log(comprobante.cli_mail,comprobante.xml_tipoComprobante)
+    this.soapService.enviarComrpobante(this.xml,comprobante.cli_mail,comprobante.xml_tipoComprobante).subscribe(
+      response => console.log(response),
+      error => console.error(error)
+    )
+    this.verificarComprobante(comprobante);
+    this.verAutorizacion(comprobante);
+  }
+
   //----------------------Metodos a nivel de aplicacion y funciones-----------------
   listarComprobantes():void{
     if (this.empresa !== undefined){
@@ -121,10 +149,25 @@ export class ComprobantesComponent implements OnInit{
     this.listaComprobantes = this.filterComrpobantes.filter((comprobante)=>
       comprobante.xmlf_comprobante.toLowerCase().includes(this.searchText.toLowerCase())
     );
+    this.totalComprobantes=this.listaComprobantes.length
+  }
+  searchComprobantesTipo(){
+    this.listaComprobantes = this.filterComrpobantes.filter((comprobante)=>
+      comprobante.xmlf_comprobante.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+    this.totalComprobantes=this.listaComprobantes.length
   }
 
   selectComprobante(comprobante:ComprobElecGrande){
     this.selectedComprobante=comprobante
+  }
+
+  guardarCambios(){
+    const modalBody=document.querySelector(".modal-body");
+    if (modalBody){
+      this.xml=modalBody.textContent;
+      console.log(this.xml);
+    }
   }
 
   verOpciones(){
@@ -134,6 +177,9 @@ export class ComprobantesComponent implements OnInit{
     this.showModal=false;
   }
 
+
+
+  //----------------------Iconos Fontawesome-----------------
   protected readonly faFileInvoice = faFileInvoice;
   protected readonly faSearch = faSearch;
   protected readonly faFileLines = faFileLines;

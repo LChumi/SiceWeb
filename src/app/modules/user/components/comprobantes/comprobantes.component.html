@@ -15,26 +15,27 @@
             <p class="card-category"> Consulte el listado de comprobantes</p>
           </div>
           <div class="card-body">
-            <div class="table-responsive">
-              <div class="d-flex justify-content-between mb-3">
-                <div class="form-group">
-                  <label for="empresaSelect">Buscar por empresa </label>
-                  <select class="form-control" id="empresaSelect" [(ngModel)]="empresa">
-                    <option value="Todos">Todos los Comprobantes</option>
-                    <option value="2">Importadora Cumpleaños</option>
-                    <option value="3">Palacios Naranjo Corsino</option>
-                    <option value="4">Importadora Eduardo Palacios Naranjo</option>
-                    <option value="4">Inmosur-Pc Cia ltda</option>
-                  </select>
-                  <button class="btn btn-success" *ngIf="!isBuscando" (click)="listarComprobantes()" >
-                    <fa-icon [icon]="faSearch"></fa-icon> </button>
-                </div>
-                <div class="form-group">
-                  <label for="searchText">Buscar comprobante</label>
-                  <input type="text" class="form-control" id="searchText" [(ngModel)]="searchText" (input)="searchComprobantes()" placeholder="Buscar Comprobante">
-                </div>
+            <div class="d-flex justify-content-between mb-3">
+              <div class="form-group">
+                <label for="empresaSelect">Buscar por empresa </label>
+                <select class="form-control" id="empresaSelect" [(ngModel)]="empresa">
+                  <option value="Todos">Todos los Comprobantes</option>
+                  <option value="2">Importadora Cumpleaños</option>
+                  <option value="3">Palacios Naranjo Corsino</option>
+                  <option value="4">Importadora Eduardo Palacios Naranjo</option>
+                  <option value="4">Inmosur-Pc Cia ltda</option>
+                </select>
+                <button class="btn btn-success" *ngIf="!isBuscando" (click)="listarComprobantes()" >
+                  <fa-icon [icon]="faSearch"></fa-icon> </button>
               </div>
-
+              <div class="form-group">
+                <label for="searchText">Buscar comprobante</label>
+                <input type="text" class="form-control" id="searchText" [(ngModel)]="searchText" (input)="searchComprobantes()" placeholder="Buscar Comprobante">
+              </div>
+            </div>
+            <h2>Comprobantes Totales: </h2>
+            <p>{{totalComprobantes}}</p>
+            <div class="table-responsive">
               <table class="table">
                 <thead class=" text-primary">
                 <th>Tipo</th>
@@ -55,17 +56,17 @@
                     <div class="details-wraper">
                       <fa-icon [icon]="faFileInvoice"></fa-icon>
                       <span class="details-tipo__empresa">
-                      {{comprobante.xml_tipoComprobante}}
+                      {{comprobante?.xml_tipoComprobante}}
                     </span>
                     </div>
                   </td>
-                  <td class="text-center">{{comprobante.xmlf_empresa}}</td>
-                  <td>{{comprobante.xmlf_comprobante}}</td>
-                  <td>{{comprobante.cco_fecha | date:'dd/MM/yyyy'}}</td>
-                  <td>{{comprobante.estado}}</td>
-                  <td>{{comprobante.cco_codigo}}</td>
-                  <td>{{comprobante.xmlf_clave}}</td>
-                  <td style="word-break: break-word; white-space: pre-wrap;">{{comprobante.cli_mail}}</td>
+                  <td class="text-center">{{comprobante?.xmlf_empresa}}</td>
+                  <td>{{comprobante?.xmlf_comprobante}}</td>
+                  <td>{{comprobante?.cco_fecha | date:'dd/MM/yyyy'}}</td>
+                  <td>{{comprobante?.estado}}</td>
+                  <td>{{comprobante?.cco_codigo}}</td>
+                  <td>{{comprobante?.xmlf_clave}}</td>
+                  <td style="word-break: break-word; white-space: pre-wrap;">{{comprobante?.cli_mail}}</td>
                   <td class="sticky-right">
                     <button class="btn btn--primary" (click)="verOpciones()">ver </button>
                   </td>
@@ -83,17 +84,17 @@
 <!-- Modal lista de opciones y errores de comprobantes -->
 <div class="modal-opciones" *ngIf="showModal">
   <div class="modal-content-opciones">
-    <span>{{selectedComprobante.xmlf_comprobante}}</span>
+    <span>{{selectedComprobante?.xmlf_comprobante}}</span>
     <div class="close" (click)="cerrarOpciones()">
       <fa-icon [icon]="faWindowClose"></fa-icon>
     </div>
     <div class="content">
-      <p>{{selectedComprobante.respuesta}}</p>
+      <p>{{selectedComprobante?.respuesta}}</p>
       <ul class="icons">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable" data-popper-placement="top" title="Mostrar XML" (click)="mostrarXml(selectedComprobante)">
           <fa-icon [icon]="faFileCode"></fa-icon>
         </button>
-        <button><fa-icon [icon]="faCheck"></fa-icon></button>
+        <button (click)="verificarComprobante(selectedComprobante)"><fa-icon [icon]="faCheck"></fa-icon></button>
       </ul>
 
     </div>
@@ -109,12 +110,12 @@
         <h5 class="modal-title">XML Generado</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" contenteditable="true">
+      <div class="modal-body" contenteditable="true"  >
         <pre>{{xml}}</pre>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Copiar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarCambios(); renviarComprobante(selectedComprobante)">Reenviar</button>
       </div>
     </div>
   </div>
