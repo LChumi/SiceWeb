@@ -9,7 +9,7 @@
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
   opacity: 0;
   animation: fadeInAnimation ease-in-out 0.25s forwards;
-  z-index: 10000;
+  z-index: 10000;/* mostrar notificaciojn sobre los modals tiene q ser mayor al modal  */
 }
 
 .notification__body {
@@ -36,10 +36,10 @@
 .progress-bar {
   height: 8px;
   width: 100%;
-  background-color: #4caf50;
+  background-color: #4caf50; /*color de la barra de progreso*/
   border-radius: 4px;
-  margin-top: 8px;
-  animation: progressBarAnimation 5s linear forwards;
+  margin-top: 8px; /* espacio entre el texto y la barra de progeso */
+  animation: progressBarAnimation 3s linear forwards;/* Duracion de la barra de progreso animacion */
 }
 
 @keyframes fadeInAnimation {

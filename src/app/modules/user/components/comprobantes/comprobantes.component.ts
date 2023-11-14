@@ -48,7 +48,6 @@ export class ComprobantesComponent implements OnInit{
       (listaComprobantes:ComprobElecGrande[])=> {
         listaComprobantes.forEach(comprobante =>{
           this.obtenerEstado(comprobante);
-          this.verRespuesta(comprobante);
         });
         this.listaComprobantes = listaComprobantes;
         this.filterComrpobantes=listaComprobantes;
@@ -141,7 +140,8 @@ export class ComprobantesComponent implements OnInit{
         this.verificarComprobante(this.selectedComprobante);
       },
       error=>{
-        console.error('No se pudo reenviar')
+        console.error('No se pudo reenviar');
+        this.botonBloqueado=false;
       },
       ()=>{
         setTimeout(()=>{
@@ -210,6 +210,7 @@ export class ComprobantesComponent implements OnInit{
  }
 
   verOpciones(){
+    this.verRespuesta(this.selectedComprobante);
     this.showModal=true;
   }
   cerrarOpciones(){

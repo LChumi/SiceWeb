@@ -6,11 +6,13 @@ import { ComprobantesComponent } from './components/comprobantes/comprobantes.co
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {FormsModule} from "@angular/forms";
 import {ComponentsModule} from "../../components/components.module";
+import { EstadoColorDirective } from './directives/estado-color.directive';
 
 
 @NgModule({
   declarations: [
-    ComprobantesComponent
+    ComprobantesComponent,
+    EstadoColorDirective
   ],
     imports: [
         CommonModule,
