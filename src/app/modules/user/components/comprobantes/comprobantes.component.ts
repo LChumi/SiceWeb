@@ -1,11 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
 import {
-  faArrowUp,
   faCheck, faFileCode,
   faFileInvoice,
   faFileLines,
-  faSearch, faSeedling,
-  faShareNodes, faStarOfLife,
+  faSearch,
   faWindowClose
 } from "@fortawesome/free-solid-svg-icons";
 import {ComprobElecGrande} from "../../../../core/models/ComprobElecGrande";
@@ -22,21 +20,29 @@ export class ComprobantesComponent implements OnInit{
 
   selectedComprobante!:ComprobElecGrande;
   listaComprobantes:ComprobElecGrande[]=[];
+
   searchText: string = '';
   filterComrpobantes: ComprobElecGrande[]=[];
   totalComprobantes:number=0;
+  isBuscando:boolean=false;
+  empresa:any
+
   showModal:boolean=false;
   xml:any='';
 
+  notificacionVisible:boolean=false;
+  notificacionMensaje:string='';
 
-  constructor(private comprobanteService:ComprobElecGrandeService,private soapService:SoapService) {}
+  botonBloqueado:boolean=false;
+
+  constructor(private comprobanteService:ComprobElecGrandeService,private soapService:SoapService,private render:Renderer2) {}
 
   ngOnInit():void {
     this.mostrarTodosComprobantes()
   }
 
   //---------------------------------Metodos a nivel de base----------------------------
-  isBuscando:boolean=false;
+
   mostrarTodosComprobantes():void{
     this.comprobanteService.getComprobantes().subscribe(
       (listaComprobantes:ComprobElecGrande[])=> {
@@ -57,7 +63,7 @@ export class ComprobantesComponent implements OnInit{
     )
   }
 
-  empresa:any
+
   mostrarComprobantesEmpresa():void{
     this.isBuscando=true;
     this.comprobanteService.getComprobantePorEmpresa(this.empresa).subscribe(
@@ -78,6 +84,7 @@ export class ComprobantesComponent implements OnInit{
   }
 
   mostrarXml(comprobante:ComprobElecGrande):void{
+    this.xml=''
     this.comprobanteService.getXml(comprobante.cco_codigo,comprobante.xmlf_empresa).subscribe(
       (dato:any) =>{
         this.xml= dato;
@@ -125,16 +132,26 @@ export class ComprobantesComponent implements OnInit{
   }
 
   renviarComprobante(comprobante:ComprobElecGrande){
+    this.botonBloqueado=true;
     console.log(comprobante.cli_mail,comprobante.xml_tipoComprobante)
     this.soapService.enviarComrpobante(this.xml,comprobante.cli_mail,comprobante.xml_tipoComprobante).subscribe(
-      response => console.log(response),
-      error => console.error(error)
+      response =>{
+        console.log(response)
+        this.showNotification('Reenvio satisfactorio ' + response)
+        this.verificarComprobante(this.selectedComprobante);
+      },
+      error=>{
+        console.error('No se pudo reenviar')
+      },
+      ()=>{
+        setTimeout(()=>{
+          this.botonBloqueado=false;
+        },5000)
+      }
     )
-    this.verificarComprobante(comprobante);
-    this.verAutorizacion(comprobante);
   }
 
-  //----------------------Metodos a nivel de aplicacion y funciones-----------------
+  //-------------------------Metodos a nivel de aplicacion y funciones--------------------
   listarComprobantes():void{
     if (this.empresa !== undefined){
       if (this.empresa === 'Todos'){
@@ -143,6 +160,11 @@ export class ComprobantesComponent implements OnInit{
         this.mostrarComprobantesEmpresa();
       }
     }
+  }
+
+  actualizar(comprobante:ComprobElecGrande){
+    this.verAutorizacion(comprobante);
+    this.obtenerEstado(comprobante)
   }
 
   searchComprobantes(){
@@ -162,13 +184,30 @@ export class ComprobantesComponent implements OnInit{
     this.selectedComprobante=comprobante
   }
 
-  guardarCambios(){
+  guardarCambios(comprobante:ComprobElecGrande){
     const modalBody=document.querySelector(".modal-body");
     if (modalBody){
       this.xml=modalBody.textContent;
       console.log(this.xml);
+      this.renviarComprobante(comprobante);
     }
   }
+
+ showNotification(message:string){
+    this.notificacionMensaje=message;
+    this.notificacionVisible=true;
+   this.verificarComprobante(this.selectedComprobante);
+   this.verAutorizacion(this.selectedComprobante);
+
+    setTimeout(() =>{
+      this.closeNotification();
+      this.obtenerEstado(this.selectedComprobante)
+      this.verRespuesta(this.selectedComprobante);
+    },3000);
+ }
+ closeNotification(){
+    this.notificacionVisible=false;
+ }
 
   verOpciones(){
     this.showModal=true;
@@ -176,6 +215,7 @@ export class ComprobantesComponent implements OnInit{
   cerrarOpciones(){
     this.showModal=false;
   }
+
 
 
 

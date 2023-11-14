@@ -1,0 +1,61 @@
+.notification {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  padding: 8px;
+  border-radius: 6px;
+  background-color: #2d75d5;
+  color: #F2ECFF;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  animation: fadeInAnimation ease-in-out 0.25s forwards;
+  z-index: 10000;
+}
+
+.notification__body {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.notification__body fa-icon {
+  height: 24px;
+  width: 24px;
+  fill: #F2ECFF;
+}
+
+.notification__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.notification__text p {
+  margin: 0;
+}
+
+.progress-bar {
+  height: 8px;
+  width: 100%;
+  background-color: #4caf50;
+  border-radius: 4px;
+  margin-top: 8px;
+  animation: progressBarAnimation 5s linear forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes progressBarAnimation {
+  0% {
+    width: 0;
+  }
+  100%{
+    width: 100%;
+  }
+}

@@ -1,3 +1,9 @@
+<app-notification
+  *ngIf="notificacionVisible"
+  [message]="notificacionMensaje"
+  (closeNotification)="closeNotification()"
+></app-notification>
+
 <div class="table-widget">
 			<span class="caption-container">
 				<span class="table-title">
@@ -84,17 +90,18 @@
 <!-- Modal lista de opciones y errores de comprobantes -->
 <div class="modal-opciones" *ngIf="showModal">
   <div class="modal-content-opciones">
-    <span>{{selectedComprobante?.xmlf_comprobante}}</span>
-    <div class="close" (click)="cerrarOpciones()">
+    <span>{{selectedComprobante.xmlf_comprobante}}</span>
+    <div class="close" (click)="cerrarOpciones(); closeNotification()">
       <fa-icon [icon]="faWindowClose"></fa-icon>
     </div>
     <div class="content">
-      <p>{{selectedComprobante?.respuesta}}</p>
+      <p>{{selectedComprobante.respuesta}}</p>
       <ul class="icons">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable" data-popper-placement="top" title="Mostrar XML" (click)="mostrarXml(selectedComprobante)">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable" data-popper-placement="top" title="Mostrar XML"
+                (click)="mostrarXml(selectedComprobante)">
           <fa-icon [icon]="faFileCode"></fa-icon>
         </button>
-        <button (click)="verificarComprobante(selectedComprobante)"><fa-icon [icon]="faCheck"></fa-icon></button>
+        <button (click)="verAutorizacion(selectedComprobante)"><fa-icon [icon]="faCheck"></fa-icon></button>
       </ul>
 
     </div>
@@ -114,10 +121,8 @@
         <pre>{{xml}}</pre>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="guardarCambios(); renviarComprobante(selectedComprobante)">Reenviar</button>
+        <button type="button" class="btn btn-primary" [disabled]="botonBloqueado" (click)="guardarCambios(selectedComprobante)" data-bs-dismiss="modal">Reenviar Xml</button>
       </div>
     </div>
   </div>
 </div><!-- End Modal Dialog Scrollable-->
-
