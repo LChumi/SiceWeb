@@ -14,12 +14,15 @@ export class EstadoColorDirective implements OnChanges{
   }
 
   setColor(){
-    switch (this.appEstadoColor.toLowerCase()) {
+    switch (this.appEstadoColor?.toLowerCase()) {
       case 'autorizado':
         this.el.nativeElement.style.color='green';
         break;
       case 'devuelto':
         this.el.nativeElement.style.color='red'
+        break;
+      case 'enviado':
+        this.el.nativeElement.style.color='orange'
     }
   }
 

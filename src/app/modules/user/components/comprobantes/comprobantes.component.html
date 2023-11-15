@@ -29,9 +29,9 @@
                   <option value="2">Importadora Cumpleaños</option>
                   <option value="3">Palacios Naranjo Corsino</option>
                   <option value="4">Importadora Eduardo Palacios Naranjo</option>
-                  <option value="4">Inmosur-Pc Cia ltda</option>
+                  <option value="5">Inmosur-Pc Cia ltda</option>
                 </select>
-                <button class="btn btn-success" *ngIf="!isBuscando" (click)="listarComprobantes()" >
+                <button class="btn btn-success" *ngIf="!loading" (click)="listarComprobantes()" >
                   <fa-icon [icon]="faSearch"></fa-icon> </button>
               </div>
               <div class="form-group">
@@ -96,12 +96,15 @@
     </div>
     <div class="content">
       <p>{{selectedComprobante.respuesta}}</p>
+      <p>{{pAutorizacion}}</p>
+      <p>{{pVerificar}}</p>
       <ul class="icons">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable" data-popper-placement="top" title="Mostrar XML"
                 (click)="mostrarXml(selectedComprobante)">
           <fa-icon [icon]="faFileCode"></fa-icon>
         </button>
-        <button (click)="verAutorizacion(selectedComprobante)"><fa-icon [icon]="faCheck"></fa-icon></button>
+        <button [disabled]="botonBloq" (click)="verAutorizacion(selectedComprobante)"><fa-icon [icon]="faLockOpen"></fa-icon></button>
+        <button [disabled]="botonBloq" (click)="verificarComprobante(selectedComprobante)"><fa-icon [icon]="faCheck"></fa-icon></button>
       </ul>
 
     </div>
@@ -121,8 +124,11 @@
         <pre>{{xml}}</pre>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" [disabled]="botonBloqueado" (click)="guardarCambios(selectedComprobante)" data-bs-dismiss="modal">Reenviar Xml</button>
+        <button type="button" class="btn btn-primary" (click)="guardarCambios(selectedComprobante)" data-bs-dismiss="modal">Reenviar Xml</button>
       </div>
     </div>
   </div>
 </div><!-- End Modal Dialog Scrollable-->
+
+<!-- loading --->
+<div *ngIf="loading" class="loading-spinner">Cargando...</div>
