@@ -35,6 +35,15 @@
                   <fa-icon [icon]="faSearch"></fa-icon> </button>
               </div>
               <div class="form-group">
+                <label for="comprobanteSelect">Buscar por tipo Comprobante </label>
+                <select class="form-control" id="comprobanteSelect" [(ngModel)]="searchDoc" (change)="searchComprobantesTipo()">
+                  <option value="FAC">Factura</option>
+                  <option value="RET">Retencion</option>
+                  <option value="NCCL">Nota de Credito</option>
+                  <option value="GUI">Guias</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label for="searchText">Buscar comprobante</label>
                 <input type="text" class="form-control" id="searchText" [(ngModel)]="searchText" (input)="searchComprobantes()" placeholder="Buscar Comprobante">
               </div>
@@ -88,7 +97,7 @@
 </div>
 
 <!-- Modal lista de opciones y errores de comprobantes -->
-<div class="modal-opciones" *ngIf="showModal">
+<div class="modal-opciones" *ngIf="showModal && selectedComprobante">
   <div class="modal-content-opciones">
     <span>{{selectedComprobante.xmlf_comprobante}}</span>
     <div class="close" (click)="cerrarOpciones(); closeNotification()">

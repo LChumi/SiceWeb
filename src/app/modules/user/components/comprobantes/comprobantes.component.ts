@@ -9,8 +9,7 @@ import {
 import {ComprobElecGrande} from "../../../../core/models/ComprobElecGrande";
 import {ComprobElecGrandeService} from "../../services/comprob-elec-grande.service";
 import {SoapService} from "../../services/soap.service";
-import {finalize} from "rxjs";
-
+import {concatMap, from, of, takeUntil, tap} from "rxjs";
 
 @Component({
   selector: 'app-comprobantes',
@@ -23,6 +22,7 @@ export class ComprobantesComponent implements OnInit{
   listaComprobantes:ComprobElecGrande[]=[];
 
   searchText: string = '';
+  searchDoc:string='';
   filterComrpobantes: ComprobElecGrande[]=[];
   totalComprobantes:number=0;
   loading:boolean=false;
@@ -49,14 +49,14 @@ export class ComprobantesComponent implements OnInit{
   //---------------------------------Metodos a nivel de base----------------------------
   mostrarTodosComprobantes():void{
     this.loading=true;
-    this.comprobanteService.getComprobantes()
-      .pipe(finalize(()=> this.loading=false))
-      .subscribe(
+    this.comprobanteService.getComprobantes().subscribe(
         (listaComprobantes:ComprobElecGrande[])=> {
-          this.actualizarListaComprobantes(listaComprobantes);
+            this.cargarEstados(listaComprobantes);
+          this.actualizarListas(listaComprobantes);
+
         },
         error => {
-          console.error('No se puede obtener la lista ',error);
+          console.error('No se puede obtener la lista ')
           this.listaComprobantes=[];
           this.totalComprobantes=0;
         }
@@ -65,15 +65,16 @@ export class ComprobantesComponent implements OnInit{
   mostrarComprobantesEmpresa():void{
     this.loading=true;
     this.comprobanteService.getComprobantePorEmpresa(this.empresa)
-      .pipe(finalize(()=> this.loading=false))
       .subscribe(
         (listaComprobantes:ComprobElecGrande[])=> {
-          this.actualizarListaComprobantes(listaComprobantes);
+          this.cargarEstados(listaComprobantes);
+          this.actualizarListas(listaComprobantes);
         },
         error => {
           console.error('No se puede obtener la lista ',error)
           this.listaComprobantes=[];
           this.totalComprobantes=0;
+          this.loading = false;
         }
       );
   }
@@ -92,22 +93,23 @@ export class ComprobantesComponent implements OnInit{
     this.soapService.verRespuesta(comprobante.xmlf_clave).subscribe(
       (respuesta:string)=>{
         comprobante.respuesta=respuesta
-      },
-      error => {
-        console.error('Error al obtener respuesta ', error)
       }
     );
   }
 
-  obtenerEstado(comprobante:ComprobElecGrande){
-    this.soapService.obtenerEstado(comprobante.xmlf_clave).subscribe(
-      (estado: string) => {
-        comprobante.estado=estado;
-      },
-      error => {
-        console.error('Error al obtener estado ',error)
-      }
-    );
+  obtenerEstado(comprobante: ComprobElecGrande): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.soapService.obtenerEstado(comprobante.xmlf_clave).subscribe(
+        (estado: string) => {
+          comprobante.estado = estado;
+          resolve();
+        },
+        (error) => {
+          console.error('Error al obtener estado ', error);
+          resolve();
+        }
+      );
+    });
   }
 
   verAutorizacion(comprobante:ComprobElecGrande){
@@ -148,7 +150,6 @@ export class ComprobantesComponent implements OnInit{
   async  showNotification(message:string){
     this.notificacionMensaje=message;
     this.notificacionVisible=true;
-    console.log(this.pAutorizacion)
     await this.verificarComprobante(this.selectedComprobante);
 
     setTimeout(async () =>{
@@ -158,30 +159,26 @@ export class ComprobantesComponent implements OnInit{
       await this.verRespuesta(this.selectedComprobante);
     },3000);
   }
-  async comprobantesListados(lista:ComprobElecGrande[]): Promise<void> {
-    this.loading=true;
-
-    for (const comprobante of lista){
-      await this.obtenerEstadosAsync(comprobante);
+  async cargarEstados(lista:ComprobElecGrande[]): Promise<void> {
+    try {
+      await Promise.all(lista.map(comprobante => this.obtenerEstadosAsync(comprobante)))
+    }catch (error){
+      console.error(error, 'Ocurrio un problema al cargar estados ')
+    }finally {
+      this.loading = false;
     }
-    this.loading=false;
   }
 
   async obtenerEstadosAsync(comprobante :ComprobElecGrande): Promise<void> {
-    return new Promise<void> ( (resolve)=>{
-      this.obtenerEstado(comprobante);
-      this.verRespuesta(comprobante);
-      this.cdr.detectChanges(); //forzar la deteccion de cambios
-      resolve();
-    });
+    try {
+      await this.obtenerEstado(comprobante);
+      await this.verRespuesta(comprobante);
+      this.cdr.detectChanges(); // forzar la detección de cambios
+    }catch (error){
+      console.error(error)
+    }
   }
   //-------------------------Metodos a nivel de aplicacion y funciones--------------------
-  private actualizarListaComprobantes(listaComprobantes:ComprobElecGrande[]){
-    this.comprobantesListados(listaComprobantes);//metodos soap
-    this.listaComprobantes = listaComprobantes;//se agrega la lista que llega del servicio a nuestra variable
-    this.filterComrpobantes = listaComprobantes;//cuando se filtran el array[] se guarda para poder buscar
-    this.totalComprobantes = listaComprobantes.length;//se usa para mandar a mostrar el total de documentos
-  }
   listarComprobantes():void{
     if (this.empresa !== undefined){
       if (this.empresa === 'Todos'){
@@ -191,6 +188,12 @@ export class ComprobantesComponent implements OnInit{
       }
     }
   }
+
+  actualizarListas(listaComprobantes:ComprobElecGrande[]){
+    this.listaComprobantes = listaComprobantes;
+    this.filterComrpobantes = listaComprobantes;
+    this.totalComprobantes = listaComprobantes.length;
+  }
   searchComprobantes(){
     this.listaComprobantes = this.filterComrpobantes.filter((comprobante)=>
       comprobante.xmlf_comprobante.toLowerCase().includes(this.searchText.toLowerCase())
@@ -199,7 +202,7 @@ export class ComprobantesComponent implements OnInit{
   }
   searchComprobantesTipo(){
     this.listaComprobantes = this.filterComrpobantes.filter((comprobante)=>
-      comprobante.xmlf_comprobante.toLowerCase().includes(this.searchText.toLowerCase())
+      comprobante.xmlf_comprobante.toLowerCase().includes(this.searchDoc.toLowerCase())
     );
     this.totalComprobantes=this.listaComprobantes.length
   }
