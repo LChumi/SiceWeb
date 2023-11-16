@@ -39,11 +39,14 @@ export class ComprobantesComponent implements OnInit{
 
   pAutorizacion:string='';
   pVerificar:string='';
+  token:any='';
 
   constructor(private comprobanteService:ComprobElecGrandeService,private soapService:SoapService,private cdr:ChangeDetectorRef) {}
 
   ngOnInit():void {
-    this.mostrarTodosComprobantes()
+    this.token=localStorage.getItem('token');
+    console.log(this.token)
+    this.mostrarTodosComprobantes();
   }
 
   //---------------------------------Metodos a nivel de base----------------------------

@@ -10,20 +10,28 @@ import {ComprobElecGrande} from "../../../core/models/ComprobElecGrande";
 export class ComprobElecGrandeService {
 
   private baseUrl:string=API_URL+'comprobantesVista/';
-  private headers = new HttpHeaders({'Content-Type' : 'application/xml', 'Accept': 'application/xml'});
 
   constructor(private http:HttpClient) { }
 
+  private getHeaders():HttpHeaders{
+  const token=localStorage.getItem('token');
+
+  return new HttpHeaders({
+    'Content-type': 'application/xml',
+    'Authorization': ` Bearer ${token}`
+  })
+}
+
   getComprobantes():Observable<ComprobElecGrande[]>{
-    return this.http.get<ComprobElecGrande[]>(this.baseUrl+'listar');
+    return this.http.get<ComprobElecGrande[]>(this.baseUrl+'listar',{headers:this.getHeaders()});
   }
 
   getComprobantePorEmpresa(empresa:any):Observable<ComprobElecGrande[]>{
-    return this.http.get<ComprobElecGrande[]>(this.baseUrl+'listaEmpresa/'+empresa)
+    return this.http.get<ComprobElecGrande[]>(this.baseUrl+'listaEmpresa/'+empresa ,{headers:this.getHeaders()})
   }
 
   getXml(cco:any, empresa:any):Observable<string>{
-    return this.http.get(this.baseUrl+'verXml/'+cco+'/'+empresa,{headers:this.headers, responseType:'text'})
+    return this.http.get(this.baseUrl+'verXml/'+cco+'/'+empresa,{headers:this.getHeaders(), responseType:'text'})
   }
 
 }
