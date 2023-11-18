@@ -11,8 +11,8 @@ export class SoapService {
   private baseurl:string=API_URL+'apiWsdl/';
 
   private getHeaders(): HttpHeaders {
-    // Obtén el token almacenado en localStorage o donde lo tengas guardado
-    const token = localStorage.getItem('token');
+    // Obtén el token almacenado en sessionStorage o donde lo tengas guardado
+    const token = sessionStorage.getItem('token');
 
     // Configura los encabezados con el token
     return new HttpHeaders({
@@ -44,7 +44,7 @@ export class SoapService {
   }
 
   enviarComrpobante(xml:string ,email:string, tipo:number):Observable<any>{
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
 
     const params=new HttpParams()
       .set('email',email)

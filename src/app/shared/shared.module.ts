@@ -4,6 +4,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {RouterLink, RouterLinkActive} from "@angular/router";
 
 
 @NgModule({
@@ -15,6 +16,8 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
   imports: [
     CommonModule,
     FontAwesomeModule,
+    RouterLinkActive,
+    RouterLink,
   ],
   exports: [
     FooterComponent,

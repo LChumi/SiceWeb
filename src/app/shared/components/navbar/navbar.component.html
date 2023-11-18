@@ -4,9 +4,17 @@
   </div>
   <div class="navbar__list">
     <ul>
-      <li><a href="#">Inicio</a></li>
-      <li><a href="#">Inicio</a></li>
-      <li><button href="#">Iniciar sesion</button> </li>
+      <li *ngIf="!isLoggedIn"><button (click)="login()">Iniciar sesión</button> </li>
+    </ul>
+  </div>
+  <div class="profile-logo dropdown" *ngIf="isLoggedIn">
+    <button class="btn btn-outline-primary dropdown-toggle" role="button" data-bs-toggle="dropdown">
+      {{nombre}}
+      <fa-icon [icon]="faRightFromBracket"></fa-icon>
+    </button>
+    <ul class="dropdown-menu dropdown-menu">
+      <li><a (click)="toComprobantes()" class="dropdown-item">Comprobantes</a></li>
+      <li><a (click)="logout()" class="dropdown-item">Cerrar Sesión</a></li>
     </ul>
   </div>
 </nav>

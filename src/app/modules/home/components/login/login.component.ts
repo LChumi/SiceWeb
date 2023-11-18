@@ -17,21 +17,21 @@ export class LoginComponent implements OnInit{
   }
 
   login(loginForm:NgForm){
-    console.log(loginForm.value)
     this.userService.login(loginForm.value).subscribe(
       (tokenInfo:TokenInfo) =>{
         if(tokenInfo){
-          console.log(tokenInfo.jwtToken);
-          // Puedes guardar el token donde lo necesites en tu aplicación
-          localStorage.setItem('token', tokenInfo.jwtToken);
+          sessionStorage.setItem('token', tokenInfo.jwtToken);
+          sessionStorage.setItem('usuario',loginForm.value.usuario);
+          this.userService.setIsLoggedIn(true)
+          loginForm.reset();
           this.router.navigate(['/Cumpleaños/sice/comprobantes'])
-        }else{
-          console.error('Sin respuesta')
         }
       },
       (error)=>{
         console.error(error)
+        alert('Ha ocurrido un problema en el inicio de sesión. Por favor, inténtalo de nuevo. ')
       }
     )
   }
+
 }

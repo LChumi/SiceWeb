@@ -7,8 +7,8 @@
 <div class="table-widget">
 			<span class="caption-container">
 				<span class="table-title">
-					<fa-icon [icon]="faFileLines"></fa-icon>
-					SICE
+					<fa-icon [icon]="faHomeAlt" (click)="toInicio()"></fa-icon>
+					Inicio
 				</span>
 				<span class="table-row-count"></span>
 			</span>
@@ -37,12 +37,23 @@
               <div class="form-group">
                 <label for="comprobanteSelect">Buscar por tipo Comprobante </label>
                 <select class="form-control" id="comprobanteSelect" [(ngModel)]="searchDoc" (change)="searchComprobantesTipo()">
+                  <option value=""></option>
                   <option value="FAC">Factura</option>
                   <option value="RET">Retencion</option>
                   <option value="NCCL">Nota de Credito</option>
                   <option value="GUI">Guias</option>
                 </select>
+
+                <label for="estadoSelect">Buscar por Estado </label>
+                <select class="form-control" id="estadoSelect" [(ngModel)]="searchEst" (change)="searchComprobantesEstado()">
+                  <option value=""></option>
+                  <option value="Autorizado">Autorizado</option>
+                  <option value="Enviado">Enviado</option>
+                  <option value="Recibido">Recibido</option>
+                  <option value="Devuelto">Devuelto</option>
+                </select>
               </div>
+
               <div class="form-group">
                 <label for="searchText">Buscar comprobante</label>
                 <input type="text" class="form-control" id="searchText" [(ngModel)]="searchText" (input)="searchComprobantes()" placeholder="Buscar Comprobante">
@@ -140,4 +151,10 @@
 </div><!-- End Modal Dialog Scrollable-->
 
 <!-- loading --->
-<div *ngIf="loading" class="loading-spinner">Cargando...</div>
+<div *ngIf="loading" class="loading-spinner">
+  <div class="spinner-border text-info" role="status">
+    <span class="visually-hidden">Cargando...</span>
+  </div>
+</div>
+
+

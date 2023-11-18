@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {
   faCheck, faFileCode,
   faFileInvoice,
-  faFileLines, faLockOpen,
+  faFileLines, faHomeAlt, faLockOpen, faRightFromBracket,
   faSearch,
   faWindowClose
 } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +10,8 @@ import {ComprobElecGrande} from "../../../../core/models/ComprobElecGrande";
 import {ComprobElecGrandeService} from "../../services/comprob-elec-grande.service";
 import {SoapService} from "../../services/soap.service";
 import {concatMap, from, of, takeUntil, tap} from "rxjs";
+import {Router} from "@angular/router";
+import {AuthenticationReqService} from "../../../home/services/authentication-req.service";
 
 @Component({
   selector: 'app-comprobantes',
@@ -23,6 +25,7 @@ export class ComprobantesComponent implements OnInit{
 
   searchText: string = '';
   searchDoc:string='';
+  searchEst:string='';
   filterComrpobantes: ComprobElecGrande[]=[];
   totalComprobantes:number=0;
   loading:boolean=false;
@@ -41,11 +44,9 @@ export class ComprobantesComponent implements OnInit{
   pVerificar:string='';
   token:any='';
 
-  constructor(private comprobanteService:ComprobElecGrandeService,private soapService:SoapService,private cdr:ChangeDetectorRef) {}
+  constructor(private comprobanteService:ComprobElecGrandeService,private authService:AuthenticationReqService,private soapService:SoapService,private cdr:ChangeDetectorRef,private route:Router) {}
 
   ngOnInit():void {
-    this.token=localStorage.getItem('token');
-    console.log(this.token)
     this.mostrarTodosComprobantes();
   }
 
@@ -56,7 +57,6 @@ export class ComprobantesComponent implements OnInit{
         (listaComprobantes:ComprobElecGrande[])=> {
             this.cargarEstados(listaComprobantes);
           this.actualizarListas(listaComprobantes);
-
         },
         error => {
           console.error('No se puede obtener la lista ')
@@ -209,6 +209,15 @@ export class ComprobantesComponent implements OnInit{
     );
     this.totalComprobantes=this.listaComprobantes.length
   }
+  searchComprobantesEstado(){
+    this.listaComprobantes = this.filterComrpobantes.filter((comprobante)=> {
+      if (comprobante.estado !==null && comprobante.estado !== undefined){
+        return comprobante.estado.toLowerCase().includes(this.searchEst.toLowerCase());
+      }
+      return false;
+      });
+    this.totalComprobantes=this.listaComprobantes.length
+  }
   selectComprobante(comprobante:ComprobElecGrande){
     this.selectedComprobante=comprobante
   }
@@ -237,12 +246,16 @@ export class ComprobantesComponent implements OnInit{
     this.pVerificar=''
   }
 
+  toInicio(){
+    this.route.navigate(['Cumpleaños/inicio'])
+  }
+
   //----------------------Iconos Fontawesome-----------------
   protected readonly faFileInvoice = faFileInvoice;
   protected readonly faSearch = faSearch;
-  protected readonly faFileLines = faFileLines;
   protected readonly faCheck = faCheck;
   protected readonly faWindowClose = faWindowClose;
   protected readonly faFileCode = faFileCode;
   protected readonly faLockOpen = faLockOpen;
+  protected readonly faHomeAlt = faHomeAlt;
 }

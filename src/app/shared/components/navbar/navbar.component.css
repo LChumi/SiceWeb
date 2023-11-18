@@ -1,11 +1,8 @@
-@import "typeface-poppins";
 .navbar {
   background: none;
-  z-index:1;
+  z-index: 1;
   width: 90%;
-  padding: 0px 100px;
-  box-sizing: border-box;
-  position: fixed;
+  padding: 0 100px;
   box-sizing: border-box;
   position: fixed;
   top: 0;
@@ -15,6 +12,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.navbar__brand {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(112.82deg, #464849 19.93%, #397cdc 102.22%);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .navbar__list ul {
@@ -40,7 +46,6 @@
   background: linear-gradient(112.82deg, #45c2ef 19.93%, #397cdc 102.22%);
   border: none;
   padding: 10px 20px;
-  font-family: Inter;
   font-weight: bold;
   color: white;
   border-radius: 9px;
@@ -71,16 +76,7 @@
   }
 }
 
-.navbar__brand {
-  font-family: Poppins;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: 700;
-  background: linear-gradient(112.82deg, #464849 19.93%, #397cdc 102.22%);
-  -webkit-background-clip: text;
-  color: transparent;
-  font-weight: 700;
-}
+
 @media (max-width: 768px) {
   .navbar {
     width: 100%;
