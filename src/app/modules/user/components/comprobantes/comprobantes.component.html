@@ -23,7 +23,7 @@
           <div class="card-body">
             <div class="d-flex justify-content-between mb-3">
               <div class="form-group">
-                <label for="empresaSelect">Buscar por empresa </label>
+                <label for="empresaSelect">Seleccionar Empresa</label>
                 <select class="form-control" id="empresaSelect" [(ngModel)]="empresa">
                   <option value="Todos">Todos los Comprobantes</option>
                   <option value="2">Importadora Cumpleaños</option>
@@ -35,7 +35,7 @@
                   <fa-icon [icon]="faSearch"></fa-icon> </button>
               </div>
               <div class="form-group">
-                <label for="comprobanteSelect">Buscar por tipo Comprobante </label>
+                <label for="comprobanteSelect">Tipo Comprobante</label>
                 <select class="form-control" id="comprobanteSelect" [(ngModel)]="searchDoc" (change)="searchComprobantesTipo()">
                   <option value=""></option>
                   <option value="FAC">Factura</option>
@@ -43,32 +43,22 @@
                   <option value="NCCL">Nota de Credito</option>
                   <option value="GUI">Guias</option>
                 </select>
-
-                <label for="estadoSelect">Buscar por Estado </label>
-                <select class="form-control" id="estadoSelect" [(ngModel)]="searchEst" (change)="searchComprobantesEstado()">
-                  <option value=""></option>
-                  <option value="Autorizado">Autorizado</option>
-                  <option value="Enviado">Enviado</option>
-                  <option value="Recibido">Recibido</option>
-                  <option value="Devuelto">Devuelto</option>
-                </select>
               </div>
 
               <div class="form-group">
-                <label for="searchText">Buscar comprobante</label>
+                <label for="searchText"># Comprobante</label>
                 <input type="text" class="form-control" id="searchText" [(ngModel)]="searchText" (input)="searchComprobantes()" placeholder="Buscar Comprobante">
               </div>
             </div>
             <h2>Comprobantes Totales: </h2>
             <p>{{totalComprobantes}}</p>
-            <div class="table-responsive">
+            <div class="table-responsive-md">
               <table class="table">
                 <thead class=" text-primary">
                 <th>Tipo</th>
                 <th>Empresa</th>
                 <th>Comprobante</th>
                 <th>Fecha</th>
-                <th>Estado</th>
                 <th>Cco codigo</th>
                 <th>Clave</th>
                 <th>Correo electrónico</th>
@@ -89,7 +79,6 @@
                   <td class="text-center">{{comprobante?.xmlf_empresa}}</td>
                   <td>{{comprobante?.xmlf_comprobante}}</td>
                   <td>{{comprobante?.cco_fecha | date:'dd/MM/yyyy'}}</td>
-                  <td [appEstadoColor]="comprobante.estado">{{comprobante?.estado}}</td>
                   <td>{{comprobante?.cco_codigo}}</td>
                   <td>{{comprobante?.xmlf_clave}}</td>
                   <td style="word-break: break-word; white-space: pre-wrap;">{{comprobante?.cli_mail}}</td>
@@ -115,16 +104,30 @@
       <fa-icon [icon]="faWindowClose"></fa-icon>
     </div>
     <div class="content">
-      <p>{{selectedComprobante.respuesta}}</p>
-      <p>{{pAutorizacion}}</p>
-      <p>{{pVerificar}}</p>
+      <p class="text-wrap">{{selectedComprobante.respuesta}}</p>
+      <p class="text-wrap">{{pAutorizacion}}</p>
+      <p class="text-wrap">{{pVerificar}}</p>
       <ul class="icons">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable" data-popper-placement="top" title="Mostrar XML"
-                (click)="mostrarXml(selectedComprobante)">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#modalDialogScrollable"
+          data-popper-placement="top" title="Mostrar XML"
+          (click)="mostrarXml(selectedComprobante)">
           <fa-icon [icon]="faFileCode"></fa-icon>
         </button>
-        <button [disabled]="botonBloq" (click)="verAutorizacion(selectedComprobante)"><fa-icon [icon]="faLockOpen"></fa-icon></button>
-        <button [disabled]="botonBloq" (click)="verificarComprobante(selectedComprobante)"><fa-icon [icon]="faCheck"></fa-icon></button>
+        <button
+          [disabled]="isResend"
+          class="btn btn-primary"
+          title="Reenviar comprobante"
+          [ngClass]="{'opacity-50 cursor-not-allowed': isResend}"
+          (click)="reenviarComprobante(selectedComprobante)">
+          <fa-icon *ngIf="!isResend" [icon]="faArrowRotateRight"></fa-icon>
+          <div *ngIf="isResend" class="spinner-border text-secondary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </button>
       </ul>
 
     </div>
@@ -144,7 +147,10 @@
         <pre>{{xml}}</pre>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="guardarCambios(selectedComprobante)" data-bs-dismiss="modal">Reenviar Xml</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="guardarCambios(selectedComprobante)" data-bs-dismiss="modal">Reenviar Xml</button>
       </div>
     </div>
   </div>
@@ -156,5 +162,3 @@
     <span class="visually-hidden">Cargando...</span>
   </div>
 </div>
-
-

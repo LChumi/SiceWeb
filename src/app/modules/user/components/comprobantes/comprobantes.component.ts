@@ -1,15 +1,15 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {
-  faCheck, faFileCode,
+  faArrowRotateRight,
+  faFileCode,
   faFileInvoice,
-  faFileLines, faHomeAlt, faLockOpen, faRightFromBracket,
+  faHomeAlt,
   faSearch,
   faWindowClose
 } from "@fortawesome/free-solid-svg-icons";
 import {ComprobElecGrande} from "../../../../core/models/ComprobElecGrande";
 import {ComprobElecGrandeService} from "../../services/comprob-elec-grande.service";
 import {SoapService} from "../../services/soap.service";
-import {concatMap, from, of, takeUntil, tap} from "rxjs";
 import {Router} from "@angular/router";
 import {AuthenticationReqService} from "../../../home/services/authentication-req.service";
 
@@ -39,6 +39,7 @@ export class ComprobantesComponent implements OnInit{
 
   botonBloqueado:boolean=false;
   botonBloq:boolean=false;
+  isResend:boolean=false;
 
   pAutorizacion:string='';
   pVerificar:string='';
@@ -55,13 +56,14 @@ export class ComprobantesComponent implements OnInit{
     this.loading=true;
     this.comprobanteService.getComprobantes().subscribe(
         (listaComprobantes:ComprobElecGrande[])=> {
-            this.cargarEstados(listaComprobantes);
+            //this.cargarEstados(listaComprobantes);
           this.actualizarListas(listaComprobantes);
         },
         error => {
           console.error('No se puede obtener la lista ')
           this.listaComprobantes=[];
           this.totalComprobantes=0;
+          this.loading = false;
         }
       );
   }
@@ -70,7 +72,6 @@ export class ComprobantesComponent implements OnInit{
     this.comprobanteService.getComprobantePorEmpresa(this.empresa)
       .subscribe(
         (listaComprobantes:ComprobElecGrande[])=> {
-          this.cargarEstados(listaComprobantes);
           this.actualizarListas(listaComprobantes);
         },
         error => {
@@ -91,60 +92,20 @@ export class ComprobantesComponent implements OnInit{
     )
   }
 
-  //-*--------------------------------Metodos SOAP------------------------------
-  verRespuesta(comprobante:ComprobElecGrande){
-    this.soapService.verRespuesta(comprobante.xmlf_clave).subscribe(
-      (respuesta:string)=>{
-        comprobante.respuesta=respuesta
-      }
-    );
-  }
-
-  obtenerEstado(comprobante: ComprobElecGrande): Promise<void> {
-    return new Promise<void>((resolve) => {
-      this.soapService.obtenerEstado(comprobante.xmlf_clave).subscribe(
-        (estado: string) => {
-          comprobante.estado = estado;
-          resolve();
-        },
-        (error) => {
-          console.error('Error al obtener estado ', error);
-          resolve();
-        }
-      );
-    });
-  }
-
   verAutorizacion(comprobante:ComprobElecGrande){
     this.botonBloq=true;
     this.soapService.verAutorizacion(comprobante.xmlf_clave).subscribe(
       (autorizacion:string)=>{
-        if (autorizacion===comprobante.xmlf_clave){
-          this.pAutorizacion='Comprobante Autorizado'
-        }else{
-          this.pAutorizacion=autorizacion
-        }
+        this.pAutorizacion = autorizacion;
       }
     )
   }
-
-  verificarComprobante(comprobante:ComprobElecGrande){
-    this.botonBloqueado=true;
-    this.soapService.verificarComprobante(comprobante.xmlf_clave).subscribe(
+  reenviarComprobante(comprobante:ComprobElecGrande){
+    this.isResend=true
+    this.soapService.reenviarComprobante(comprobante.xmlf_caracter,comprobante.cli_mail).subscribe(
       (verificacion:string)=>{
         this.pVerificar=verificacion
-      }
-    )
-  }
-
-  renviarComprobante(comprobante:ComprobElecGrande){
-    this.soapService.enviarComrpobante(this.xml,comprobante.cli_mail,comprobante.xml_tipoComprobante).subscribe(
-      response =>{
-        this.verificarComprobante(this.selectedComprobante);
-        this.showNotification('Reenvio satisfactorio ' + response)
-      },
-      error=>{
-        console.error('No se pudo reenviar',error);
+        this.isResend=false;
       }
     )
   }
@@ -153,34 +114,16 @@ export class ComprobantesComponent implements OnInit{
   async  showNotification(message:string){
     this.notificacionMensaje=message;
     this.notificacionVisible=true;
-    await this.verificarComprobante(this.selectedComprobante);
+    //await this.verificarComprobante(this.selectedComprobante);
 
     setTimeout(async () =>{
       this.closeNotification();
-      this.verAutorizacion(this.selectedComprobante);
-      await this.obtenerEstado(this.selectedComprobante)
-      await this.verRespuesta(this.selectedComprobante);
+      //this.verAutorizacion(this.selectedComprobante);
+      //await this.obtenerEstado(this.selectedComprobante)
+      //await this.verRespuesta(this.selectedComprobante);
     },3000);
   }
-  async cargarEstados(lista:ComprobElecGrande[]): Promise<void> {
-    try {
-      await Promise.all(lista.map(comprobante => this.obtenerEstadosAsync(comprobante)))
-    }catch (error){
-      console.error(error, 'Ocurrio un problema al cargar estados ')
-    }finally {
-      this.loading = false;
-    }
-  }
 
-  async obtenerEstadosAsync(comprobante :ComprobElecGrande): Promise<void> {
-    try {
-      await this.obtenerEstado(comprobante);
-      await this.verRespuesta(comprobante);
-      this.cdr.detectChanges(); // forzar la detección de cambios
-    }catch (error){
-      console.error(error)
-    }
-  }
   //-------------------------Metodos a nivel de aplicacion y funciones--------------------
   listarComprobantes():void{
     if (this.empresa !== undefined){
@@ -196,6 +139,7 @@ export class ComprobantesComponent implements OnInit{
     this.listaComprobantes = listaComprobantes;
     this.filterComrpobantes = listaComprobantes;
     this.totalComprobantes = listaComprobantes.length;
+    this.loading = false;
   }
   searchComprobantes(){
     this.listaComprobantes = this.filterComrpobantes.filter((comprobante)=>
@@ -225,7 +169,7 @@ export class ComprobantesComponent implements OnInit{
     const modalBody=document.querySelector(".modal-body");
     if (modalBody){
       this.xml=modalBody.textContent;
-      this.renviarComprobante(comprobante);
+      //this.renviarComprobante(comprobante);
     }
   }
 
@@ -253,9 +197,8 @@ export class ComprobantesComponent implements OnInit{
   //----------------------Iconos Fontawesome-----------------
   protected readonly faFileInvoice = faFileInvoice;
   protected readonly faSearch = faSearch;
-  protected readonly faCheck = faCheck;
   protected readonly faWindowClose = faWindowClose;
   protected readonly faFileCode = faFileCode;
-  protected readonly faLockOpen = faLockOpen;
   protected readonly faHomeAlt = faHomeAlt;
+  protected readonly faArrowRotateRight = faArrowRotateRight;
 }

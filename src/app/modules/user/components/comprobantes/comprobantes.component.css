@@ -136,9 +136,18 @@ table td{
 }
 .content {
   margin: 20px 0;
+  max-width: 100%; /* Asegura que el contenedor no exceda el ancho de su contenedor principal */
+  word-wrap: break-word; /* Permite que las palabras largas se partan y se ajusten al contenedor */
+  overflow: hidden; /* Oculta cualquier contenido que desborde el contenedor */
+  white-space: pre-wrap; /* Mantiene los saltos de línea y los espacios en blanco */
 }
+
 .content p {
-  font-size: 16px;
+  font-size: 16px; /* Establece el tamaño de la fuente para los párrafos dentro de .content */
+  word-wrap: break-word; /* Permite que las palabras largas se partan y se ajusten al contenedor */
+  overflow-wrap: break-word; /* Otra propiedad que asegura el ajuste de palabras largas */
+  white-space: pre-wrap; /* Mantiene los saltos de línea y los espacios en blanco */
+  margin: 0; /* Opcional: Ajusta el margen si es necesario */
 }
 .icons {
   display: flex; /* Establece un contenedor flexible para los íconos */

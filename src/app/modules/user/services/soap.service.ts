@@ -57,4 +57,18 @@ export class SoapService {
     return this.http.post<any>(this.baseurl+'recibirComprobante/',xml,httpOptions)
   }
 
+  reenviarComprobante(xml:string , email:string):Observable<any>{
+    const token = sessionStorage.getItem('token');
+
+    const params=new HttpParams()
+      .set('email',email)
+
+    const httpOptions={
+      headers:new HttpHeaders({'Content-Type':'application/json','Authorization': `Bearer ${token}`}),
+      params:params,
+      responseType: 'Text' as 'json'
+    }
+    return this.http.post<any>(this.baseurl+'reenviarComprobante/',xml,httpOptions)
+  }
+
 }
