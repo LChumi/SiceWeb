@@ -25,11 +25,11 @@
               <div class="form-group">
                 <label for="empresaSelect">Seleccionar Empresa</label>
                 <select class="form-control" id="empresaSelect" [(ngModel)]="empresa">
-                  <option value="Todos">Todos los Comprobantes</option>
-                  <option value="2">Importadora Cumpleaños</option>
-                  <option value="3">Palacios Naranjo Corsino</option>
-                  <option value="4">Importadora Eduardo Palacios Naranjo</option>
-                  <option value="5">Inmosur-Pc Cia ltda</option>
+                  <option value="Todos">TODOS LOS COMPROBANTES</option>
+                  <option value="2">IMPORTADORA CUMPLEAÑOS</option>
+                  <option value="3">PALACIOS NARANJO CORSINO EDUARDO</option>
+                  <option value="4">IMPORTADORA EDUARDO PALACIOS NARANJO</option>
+                  <option value="5">INMOSUR-PC CIA LTDA</option>
                 </select>
                 <button class="btn btn-success" *ngIf="!loading" (click)="listarComprobantes()" >
                   <fa-icon [icon]="faSearch"></fa-icon> </button>
@@ -38,10 +38,10 @@
                 <label for="comprobanteSelect">Tipo Comprobante</label>
                 <select class="form-control" id="comprobanteSelect" [(ngModel)]="searchDoc" (change)="searchComprobantesTipo()">
                   <option value=""></option>
-                  <option value="FAC">Factura</option>
-                  <option value="RET">Retencion</option>
-                  <option value="NCCL">Nota de Credito</option>
-                  <option value="GUI">Guias</option>
+                  <option value="FAC">FACTURA</option>
+                  <option value="RET">RETENCION</option>
+                  <option value="NCCL">NOTA DE CREDITO</option>
+                  <option value="GUI">GUIAS</option>
                 </select>
               </div>
 
