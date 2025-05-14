@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {
-  faArrowRotateRight,
+  faArrowRotateRight, faCode,
   faFileCode,
   faFileInvoice,
   faHomeAlt,
@@ -38,6 +38,7 @@ export class ComprobantesComponent implements OnInit{
 
   botonBloq:boolean=false;
   isResend:boolean=false;
+  isCreateXml:boolean=false;
 
   pAutorizacion:string='';
   pVerificar:string='';
@@ -90,17 +91,22 @@ export class ComprobantesComponent implements OnInit{
   }
 
   crearXml(comprobante:ComprobElecGrande):void{
-    this.isResend=true
+    this.isCreateXml=true
     this.comprobanteService.crearXml(comprobante.cco_codigo,comprobante.xmlf_empresa).subscribe({
       next: data => {
         if (data === 'ok'){
           this.mostrarXml(comprobante)
-          this.isResend=false;
+          this.isCreateXml=false;
+
         } else {
-          this.notificacionVisible=true;
-          this.notificacionMensaje=data;
-          this.cdr.detectChanges();
+          this.xml = "No se pudo crear el XML"
+          this.isCreateXml=false;
         }
+      },
+      error: err => {
+        console.error(err)
+        this.xml = "No se pudo crear el XML"
+        this.isCreateXml=false;
       }
       }
     )
@@ -109,12 +115,16 @@ export class ComprobantesComponent implements OnInit{
 
   reenviarComprobante(comprobante:ComprobElecGrande){
     this.isResend=true
-    this.soapService.reenviarComprobante(comprobante.xmlf_caracter,comprobante.cli_mail).subscribe(
-      (verificacion:string)=>{
-        this.pVerificar=verificacion
+    this.soapService.reenviarComprobante(comprobante.xmlf_caracter,comprobante.cli_mail).subscribe({
+      next: verification=>{
+        this.pVerificar=verification
+        this.sendTexNotification("Comprobante Autorizado: " + verification)
         this.isResend=false;
+      },
+      error: err=>{
+        console.error(err)
       }
-    )
+    })
   }
 
   //-------------------------Metodos a nivel de aplicacion y funciones--------------------
@@ -176,7 +186,13 @@ export class ComprobantesComponent implements OnInit{
   }
 
   toInicio(){
-    this.route.navigate(['Cumpleaños/inicio'])
+    this.route.navigate(['Cumpleaños/inicio']).then(r => {})
+  }
+
+  sendTexNotification(mensaje:string){
+    this.notificacionVisible=true;
+    this.notificacionMensaje=mensaje;
+    this.cdr.detectChanges();
   }
 
   //----------------------Iconos Fontawesome-----------------
@@ -186,4 +202,5 @@ export class ComprobantesComponent implements OnInit{
   protected readonly faFileCode = faFileCode;
   protected readonly faHomeAlt = faHomeAlt;
   protected readonly faArrowRotateRight = faArrowRotateRight;
+  protected readonly faCode = faCode;
 }

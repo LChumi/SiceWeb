@@ -150,7 +150,13 @@
         <button *ngIf="!xml"
           type="button"
           class="btn btn-primary"
-          (click)="guardarCambios(selectedComprobante)" data-bs-dismiss="modal">Reenviar Xml</button>
+          (click)="crearXml(selectedComprobante)" data-bs-dismiss="modal">
+          Generar Xml
+          <fa-icon *ngIf="!isCreateXml" [icon]="faCode"></fa-icon>
+          <div *ngIf="isCreateXml" class="spinner-border text-secondary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </button>
       </div>
     </div>
   </div>

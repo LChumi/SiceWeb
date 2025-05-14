@@ -1,12 +1,12 @@
 import {Component, EventEmitter, Input, Output,OnInit} from '@angular/core';
-import {faCloudUpload} from "@fortawesome/free-solid-svg-icons";
+import {faCloudUpload, faUpload} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-notification',
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css']
 })
-export class NotificationComponent {
+export class NotificationComponent implements OnInit{
 
   @Input() message:string='';
   @Output() closeNotification= new EventEmitter<void>();
@@ -22,4 +22,5 @@ export class NotificationComponent {
   }
 
   protected readonly faCloudUpload = faCloudUpload;
+  protected readonly faUpload = faUpload;
 }
