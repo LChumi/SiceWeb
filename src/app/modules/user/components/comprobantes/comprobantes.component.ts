@@ -25,7 +25,6 @@ export class ComprobantesComponent implements OnInit{
 
   searchText: string = '';
   searchDoc:string='';
-  searchEst:string='';
   filterComrpobantes: ComprobElecGrande[]=[];
   totalComprobantes:number=0;
   loading:boolean=false;
@@ -37,7 +36,6 @@ export class ComprobantesComponent implements OnInit{
   notificacionVisible:boolean=false;
   notificacionMensaje:string='';
 
-  botonBloqueado:boolean=false;
   botonBloq:boolean=false;
   isResend:boolean=false;
 
@@ -54,33 +52,32 @@ export class ComprobantesComponent implements OnInit{
   //---------------------------------Metodos a nivel de base----------------------------
   mostrarTodosComprobantes():void{
     this.loading=true;
-    this.comprobanteService.getComprobantes().subscribe(
-        (listaComprobantes:ComprobElecGrande[])=> {
-            //this.cargarEstados(listaComprobantes);
-          this.actualizarListas(listaComprobantes);
-        },
-        error => {
-          console.error('No se puede obtener la lista ')
-          this.listaComprobantes=[];
-          this.totalComprobantes=0;
-          this.loading = false;
-        }
-      );
+    this.comprobanteService.getComprobantes().subscribe({
+      next: listaComprobantes => {
+        this.actualizarListas(listaComprobantes);
+      },
+      error: err => {
+        console.error('No se puede obtener la lista ')
+        this.listaComprobantes = [];
+        this.totalComprobantes = 0;
+        this.loading = false;
+      }
+    });
   }
   mostrarComprobantesEmpresa():void{
     this.loading=true;
     this.comprobanteService.getComprobantePorEmpresa(this.empresa)
-      .subscribe(
-        (listaComprobantes:ComprobElecGrande[])=> {
+      .subscribe({
+        next: listaComprobantes=> {
           this.actualizarListas(listaComprobantes);
         },
-        error => {
-          console.error('No se puede obtener la lista ',error)
+        error: err => {
+          console.error('No se puede obtener la lista ',err)
           this.listaComprobantes=[];
           this.totalComprobantes=0;
           this.loading = false;
         }
-      );
+      });
   }
 
   mostrarXml(comprobante:ComprobElecGrande):void{
@@ -92,14 +89,24 @@ export class ComprobantesComponent implements OnInit{
     )
   }
 
-  verAutorizacion(comprobante:ComprobElecGrande){
-    this.botonBloq=true;
-    this.soapService.verAutorizacion(comprobante.xmlf_clave).subscribe(
-      (autorizacion:string)=>{
-        this.pAutorizacion = autorizacion;
+  crearXml(comprobante:ComprobElecGrande):void{
+    this.isResend=true
+    this.comprobanteService.crearXml(comprobante.cco_codigo,comprobante.xmlf_empresa).subscribe({
+      next: data => {
+        if (data === 'ok'){
+          this.mostrarXml(comprobante)
+          this.isResend=false;
+        } else {
+          this.notificacionVisible=true;
+          this.notificacionMensaje=data;
+          this.cdr.detectChanges();
+        }
+      }
       }
     )
   }
+
+
   reenviarComprobante(comprobante:ComprobElecGrande){
     this.isResend=true
     this.soapService.reenviarComprobante(comprobante.xmlf_caracter,comprobante.cli_mail).subscribe(
@@ -108,20 +115,6 @@ export class ComprobantesComponent implements OnInit{
         this.isResend=false;
       }
     )
-  }
-
-  //-------------------------Metodos asincronos--------------------
-  async  showNotification(message:string){
-    this.notificacionMensaje=message;
-    this.notificacionVisible=true;
-    //await this.verificarComprobante(this.selectedComprobante);
-
-    setTimeout(async () =>{
-      this.closeNotification();
-      //this.verAutorizacion(this.selectedComprobante);
-      //await this.obtenerEstado(this.selectedComprobante)
-      //await this.verRespuesta(this.selectedComprobante);
-    },3000);
   }
 
   //-------------------------Metodos a nivel de aplicacion y funciones--------------------
@@ -153,15 +146,7 @@ export class ComprobantesComponent implements OnInit{
     );
     this.totalComprobantes=this.listaComprobantes.length
   }
-  searchComprobantesEstado(){
-    this.listaComprobantes = this.filterComrpobantes.filter((comprobante)=> {
-      if (comprobante.estado !==null && comprobante.estado !== undefined){
-        return comprobante.estado.toLowerCase().includes(this.searchEst.toLowerCase());
-      }
-      return false;
-      });
-    this.totalComprobantes=this.listaComprobantes.length
-  }
+
   selectComprobante(comprobante:ComprobElecGrande){
     this.selectedComprobante=comprobante
   }

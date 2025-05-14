@@ -26,16 +26,16 @@ export class NavbarComponent implements OnInit{
   }
 
   login():void{
-    this.router.navigate(["Cumpleaños/inicio/login"])
+    this.router.navigate(["cumple/inicio/login"])
   }
 
   logout(){
     sessionStorage.clear();
-    this.router.navigate(["Cumpleaños/inicio/login"])
+    this.router.navigate(["cumple/inicio/login"])
   }
 
   toComprobantes(){
-    this.router.navigate(["Cumpleaños/sice/comprobantes"])
+    this.router.navigate(["cumple/comprobantes/monitoreo"])
   }
 
   protected readonly faRightFromBracket = faRightFromBracket;

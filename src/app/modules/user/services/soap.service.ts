@@ -23,38 +23,9 @@ export class SoapService {
 
   constructor(private http:HttpClient) { }
 
-  obtenerEstado(clave:string):Observable<any>{
-    const body= `clave=${clave}`;
-    return this.http.post<any>(this.baseurl+'obtenerEstado',body,{headers:this.getHeaders()})
-  }
-
-  verRespuesta(clave:string):Observable<any>{
-    const body=`clave=${clave}`
-    return this.http.post<any>(this.baseurl+'verRespuesta',body,{headers:this.getHeaders()})
-  }
-
   verAutorizacion(clave:string):Observable<any>{
     const body=`clave=${clave}`
     return this.http.post<any>(this.baseurl+'obtieneAutorizacion',body,{headers:this.getHeaders()})
-  }
-
-  verificarComprobante(clave:string):Observable<any>{
-    const body=`clave=${clave}`
-    return this.http.post<any>(this.baseurl+'verificarComprobante',body,{headers:this.getHeaders()})
-  }
-
-  enviarComrpobante(xml:string ,email:string, tipo:number):Observable<any>{
-    const token = sessionStorage.getItem('token');
-
-    const params=new HttpParams()
-      .set('email',email)
-      .set('tipo',tipo.toString());
-
-    const httpOptions={
-      headers:new HttpHeaders({'Content-Type':'application/json','Authorization': `Bearer ${token}`}),
-      params:params
-    }
-    return this.http.post<any>(this.baseurl+'recibirComprobante/',xml,httpOptions)
   }
 
   reenviarComprobante(xml:string , email:string):Observable<any>{

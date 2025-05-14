@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit{
           sessionStorage.setItem('usuario',loginForm.value.usuario);
           this.userService.setIsLoggedIn(true)
           loginForm.reset();
-          this.router.navigate(['/Cumpleaños/sice/comprobantes'])
+          this.router.navigate(['/cumple/comprobantes/monitoreo'])
         }
       },
       (error)=>{

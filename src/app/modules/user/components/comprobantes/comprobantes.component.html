@@ -147,7 +147,7 @@
         <pre>{{xml}}</pre>
       </div>
       <div class="modal-footer">
-        <button
+        <button *ngIf="!xml"
           type="button"
           class="btn btn-primary"
           (click)="guardarCambios(selectedComprobante)" data-bs-dismiss="modal">Reenviar Xml</button>

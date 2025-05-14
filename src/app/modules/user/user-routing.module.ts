@@ -3,9 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import {ComprobantesComponent} from "./components/comprobantes/comprobantes.component";
 
 const routes: Routes = [
-      {path:'comprobantes',component:ComprobantesComponent},
-      {path:'',redirectTo:'comprobantes',pathMatch:'full'},
-      {path:'**',redirectTo:'comprobantes'}
+      {path:'monitoreo',component:ComprobantesComponent},
+      {path:'',redirectTo:'monitoreo',pathMatch:'full'},
+      {path:'**',redirectTo:'monitoreo'}
 ];
 
 @NgModule({

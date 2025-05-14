@@ -34,4 +34,8 @@ export class ComprobElecGrandeService {
     return this.http.get(this.baseUrl+'verXml/'+cco+'/'+empresa,{headers:this.getHeaders(), responseType:'text'})
   }
 
+  crearXml(cco:any, empresa:any):Observable<any>{
+    return this.http.get(this.baseUrl+'crearXml/'+cco+'/empresa/'+empresa,{headers:this.getHeaders(), responseType:'text'})
+  }
+
 }
