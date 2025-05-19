@@ -15,23 +15,12 @@ const routes: Routes = [
         canActivate:[authGuard],
         loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule)
       },
-      {
-        path: '', // Ruta predeterminada 'cumple' (por ejemplo, /cumple/)
-        redirectTo: 'inicio',
-        pathMatch: 'full'
-      },
-      {
-        path: '**', // Cualquier otra ruta no reconocida bajo 'cumple' (por ejemplo, /cumple/otra)
-        redirectTo: 'inicio',
-        pathMatch: 'full'
-      }
+      {path: '', redirectTo: 'inicio', pathMatch: 'full'},
+      {path: '**', redirectTo: 'inicio', pathMatch: 'full'}
     ]
   },
-  {
-    path: '', // Ruta predeterminada en caso de acceso directo a / (por ejemplo, /inicio)
-    redirectTo: 'cumple/',
-    pathMatch: 'full'
-  }
+  {path: '', redirectTo: 'cumple/inicio', pathMatch: 'full'},
+  {path: '**', redirectTo: 'cumple/inicio', pathMatch: 'full'}
 ];
 
 @NgModule({
