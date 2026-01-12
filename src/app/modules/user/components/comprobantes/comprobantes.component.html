@@ -21,7 +21,7 @@
             <p class="card-category"> Consulte el listado de comprobantes</p>
           </div>
           <div class="card-body">
-            <div class="d-flex justify-content-between mb-3">
+            <div class="filters-container mb-3">
               <div class="form-group">
                 <label for="empresaSelect">Seleccionar Empresa</label>
                 <select class="form-control" id="empresaSelect" [(ngModel)]="empresa">
@@ -44,7 +44,6 @@
                   <option value="GUI">GUIAS</option>
                 </select>
               </div>
-
               <div class="form-group">
                 <label for="searchText"># Comprobante</label>
                 <input type="text" class="form-control" id="searchText" [(ngModel)]="searchText" (input)="searchComprobantes()" placeholder="Buscar Comprobante">
@@ -68,7 +67,7 @@
                 </thead>
                 <tbody>
                 <tr class="view-modal" *ngFor="let comprobante of listaComprobantes" (click)="selectComprobante(comprobante)">
-                  <td>
+                  <td data-label="tipo">
                     <div class="details-wraper">
                       <fa-icon [icon]="faFileInvoice"></fa-icon>
                       <span class="details-tipo__empresa">
@@ -76,14 +75,19 @@
                     </span>
                     </div>
                   </td>
-                  <td class="text-center">{{comprobante?.xmlf_empresa}}</td>
-                  <td>{{comprobante?.xmlf_comprobante}}</td>
-                  <td>{{comprobante?.cco_fecha | date:'dd/MM/yyyy'}}</td>
-                  <td>{{comprobante?.cco_codigo}}</td>
-                  <td>{{comprobante?.xmlf_clave}}</td>
-                  <td style="word-break: break-word; white-space: pre-wrap;">{{comprobante?.cli_mail}}</td>
-                  <td class="sticky-right">
-                    <button class="btn btn--primary" (click)="verOpciones()">ver </button>
+                  <td data-label="Empresa" class="text-center">{{comprobante?.xmlf_empresa}}</td>
+                  <td data-label="comprobante">{{comprobante?.xmlf_comprobante}}</td>
+                  <td data-label="fecha">{{comprobante?.cco_fecha | date:'dd/MM/yyyy'}}</td>
+                  <td data-label="codigo">{{comprobante?.cco_codigo}}</td>
+                  <td data-label="clave">{{comprobante?.xmlf_clave}}</td>
+                  <td data-label="email" style="word-break: break-word; white-space: pre-wrap;">{{comprobante?.cli_mail}}</td>
+                  <td data-label="opciones" class="sticky-right">
+                    <button
+                      class="btn btn--primary"
+                      (click)="selectComprobante(comprobante) ;verOpciones(); $event.stopPropagation()">
+                      <fa-icon [icon]="faEye"></fa-icon>
+                    </button>
+
                   </td>
                 </tr>
                 </tbody>

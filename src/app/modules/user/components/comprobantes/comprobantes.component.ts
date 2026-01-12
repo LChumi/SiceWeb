@@ -1,9 +1,9 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {
-  faArrowRotateRight, faCode,
+  faArrowRotateRight, faCode, faEye,
   faFileCode,
   faFileInvoice,
-  faHomeAlt,
+  faHomeAlt, faRightFromBracket,
   faSearch,
   faWindowClose
 } from "@fortawesome/free-solid-svg-icons";
@@ -203,4 +203,6 @@ export class ComprobantesComponent implements OnInit{
   protected readonly faHomeAlt = faHomeAlt;
   protected readonly faArrowRotateRight = faArrowRotateRight;
   protected readonly faCode = faCode;
+  protected readonly faRightFromBracket = faRightFromBracket;
+  protected readonly faEye = faEye;
 }
