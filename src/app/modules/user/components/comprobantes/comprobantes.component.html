@@ -154,7 +154,7 @@
         <button *ngIf="!xml"
           type="button"
           class="btn btn-primary"
-          (click)="crearXml(selectedComprobante)" data-bs-dismiss="modal">
+          (click)="crearXml(selectedComprobante)">
           Generar Xml
           <fa-icon *ngIf="!isCreateXml" [icon]="faCode"></fa-icon>
           <div *ngIf="isCreateXml" class="spinner-border text-secondary" role="status">
